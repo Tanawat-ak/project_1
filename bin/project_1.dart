@@ -70,7 +70,7 @@ Future<void> main() async {
         continue;
       }
 
-      final addUrl = Uri.parse('http://localhost:3000/add_expense');
+      final addUrl = Uri.parse('http://localhost:3000/expenses');
       final response = await http.post(
         addUrl,
         headers: {'Content-Type': 'application/json'},
@@ -82,11 +82,11 @@ Future<void> main() async {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print("Inserted!");
       } else {
         print("Failed to insert. Status: ${response.statusCode}");
-      }       
+      }    
       
 
     } else if (choice == "5") {
