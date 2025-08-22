@@ -102,8 +102,9 @@ Future<void> showExpenses(int userId, {required bool all}) async {
   print("Total expenses = ${total}฿");
 }
 
-// Future dalete
+// Future delete
 Future<void> deleteExpenses(int userId) async {
+  print("===== Delete an item =====");
   stdout.write("Item id: ");
   String? idInput = stdin.readLineSync();
   final expenseId = int.tryParse(idInput ?? "");
@@ -118,8 +119,8 @@ Future<void> deleteExpenses(int userId) async {
       body: jsonEncode({'user_id': userId}));
 
   if (response.statusCode == 200) {
-    print("Expense $expenseId deleted successfully!");
+    print("deleted!");
   } else {
-    print("Failed to delete expense: ${response.body}");
+    print("Failed to delete ");
   }
 }
