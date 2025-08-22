@@ -69,6 +69,7 @@ Future<void> main() async {
         print("Incomplete input");
         continue;
       }
+
       final addUrl = Uri.parse('http://localhost:3000/add_expense');
       final response = await http.post(
         addUrl,
@@ -80,6 +81,12 @@ Future<void> main() async {
           "date": DateTime.now().toIso8601String(),
         }),
       );
+
+      if (response.statusCode == 200) {
+        print("Inserted!");
+      } else {
+        print("Failed to insert. Status: ${response.statusCode}");
+      }       
       
 
     } else if (choice == "5") {
