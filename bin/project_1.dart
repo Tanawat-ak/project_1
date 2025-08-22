@@ -60,9 +60,34 @@ Future<void> main() async {
 
     } else if (choice == "4") {
       // feature add
+      print("===== Add new item =====");
+      stdout.write("Item : ");
+      String? itemName = stdin.readLineSync()?.trim();
+      stdout.write("Paid : ");
+      String? paidPrice = stdin.readLineSync()?.trim();
+      if (itemName == null || paidPrice == null) {
+        print("Incomplete input");
+        continue;
+      }
 
+      final addUrl = Uri.parse('http://localhost:3000/expenses');
+      final response = await http.post(
+        addUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "user_id": userId,
+          "item": itemName,
+          "paid": int.tryParse(paidPrice) ?? 0,
+          "date": DateTime.now().toIso8601String(),
+        }),
+      );
 
-
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Inserted!");
+      } else {
+        print("Failed to insert. Status: ${response.statusCode}");
+      }    
+      
 
     } else if (choice == "5") {
       // feature delete
