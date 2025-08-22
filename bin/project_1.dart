@@ -54,6 +54,13 @@ Future<void> main() async {
       await showExpenses(userId, all: false);
     } else if (choice == "3") {
       // feature search
+      stdout.write("Item to search: ");
+      String? keyword = stdin.readLineSync()?.trim();
+      if (keyword != null && keyword.isNotEmpty) {
+        await searchExpenses(userId, keyword);
+      } else {
+        print("No");
+      }
     } else if (choice == "4") {
       // feature add
       print("===== Add new item =====");
@@ -129,6 +136,30 @@ Future<void> showExpenses(int userId, {required bool all}) async {
     total += exp['paid'] as int;
   }
   print("Total expenses = ${total}฿");
+}
+
+//------------------- Search expenses feature --------------------
+Future<void> searchExpenses(int userId, String keyword) async {
+  final url = Uri.parse(
+    'http://localhost:3000/search?user_id=$userId&keyword=$keyword',
+  );
+  final response = await http.get(url);
+
+  if (response.statusCode != 200) {
+    print("Error searching expenses");
+    return;
+  }
+
+  final expenses = jsonDecode(response.body) as List;
+  if (expenses.isEmpty) {
+    print("No item: $keyword");
+    return;
+  }
+
+  for (var exp in expenses) {
+    final dt = DateTime.parse(exp['date']).toLocal();
+    print("${exp['id']}. ${exp['item']} : ${exp['paid']}฿ : $dt");
+  }
 }
 
 // Future delete
