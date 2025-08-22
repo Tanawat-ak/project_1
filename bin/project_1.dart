@@ -54,10 +54,6 @@ Future<void> main() async {
       await showExpenses(userId, all: false);
     } else if (choice == "3") {
       // feature search
-
-
-
-
     } else if (choice == "4") {
       // feature add
       print("===== Add new item =====");
@@ -91,10 +87,7 @@ Future<void> main() async {
 
     } else if (choice == "5") {
       // feature delete
-
-
-
-
+      await deleteExpenses(userId);
     } else if (choice == "6") {
       print("------- Bye -------");
       break;
@@ -116,8 +109,11 @@ Future<void> showExpenses(int userId, {required bool all}) async {
   final expenses = jsonDecode(response.body) as List;
   int total = 0;
 
-  print(all ? "------------- All expenses ------------" 
-             : "---------- Today's expenses -----------");
+  print(
+    all
+        ? "------------- All expenses ------------"
+        : "---------- Today's expenses -----------",
+  );
 
   for (var exp in expenses) {
     final dt = DateTime.parse(exp['date']).toLocal();
@@ -133,4 +129,27 @@ Future<void> showExpenses(int userId, {required bool all}) async {
     total += exp['paid'] as int;
   }
   print("Total expenses = ${total}฿");
+}
+
+// Future delete
+Future<void> deleteExpenses(int userId) async {
+  print("===== Delete an item =====");
+  stdout.write("Item id: ");
+  String? idInput = stdin.readLineSync();
+  final expenseId = int.tryParse(idInput ?? "");
+
+    if (expenseId == null) {
+    print("Invalid ID");
+    return;
+  }
+    final url = Uri.parse('http://localhost:3000/expenses/$expenseId');
+  final response = await http.delete(url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'user_id': userId}));
+
+  if (response.statusCode == 200) {
+    print("deleted!");
+  } else {
+    print("Failed to delete ");
+  }
 }
